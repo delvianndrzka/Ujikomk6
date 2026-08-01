@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Agriculture IoT Monitoring</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-seedling"></i></div>
+      <div>
+        <h2>Delvia's Smart Agriculture</h2>
+        <span>IoT Monitoring System</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <span class="badge" id="tsStatus"><span class="dot"></span>ThingSpeak</span>
+      <span class="badge" id="espStatus"><span class="dot"></span>ESP32</span>
+      <span class="badge clock" id="clock">--:--</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ================= SENSOR CARDS ================= -->
+    <section class="cards">
+
+      <div class="card temp">
+        <div class="icon"><i class="fa-solid fa-temperature-three-quarters"></i></div>
+        <div class="card-info">
+          <p>Suhu Udara</p>
+          <h2 id="temp">-- °C</h2>
+          <span class="mini-status" id="tempStatus">-</span>
+        </div>
+      </div>
+
+      <div class="card hum">
+        <div class="icon"><i class="fa-solid fa-droplet"></i></div>
+        <div class="card-info">
+          <p>Kelembapan Udara</p>
+          <h2 id="hum">-- %</h2>
+          <span class="mini-status" id="humStatus">-</span>
+        </div>
+      </div>
+
+      <div class="card soil">
+        <div class="icon"><i class="fa-solid fa-leaf"></i></div>
+        <div class="card-info">
+          <p>Kelembapan Tanah</p>
+          <h2 id="soil">-- %</h2>
+          <span class="mini-status" id="soilStatus">-</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= CONTROL ================= -->
+    <section class="controlCard">
+      <div class="section-title">
+        <h2><i class="fa-solid fa-sliders"></i> Kontrol Sistem</h2>
+        <span class="subtitle">Aktifkan mode AUTO agar sistem mengambil keputusan otomatis berdasarkan sensor</span>
+      </div>
+
+      <div class="relayGrid">
+
+        <!-- ============ POMPA ============ -->
+        <div class="relay pump">
+          <div class="relay-head">
+            <div class="relay-title">
+              <span class="relay-icon"><i class="fa-solid fa-water"></i></span>
+              <div>
+                <h3>Pompa Air</h3>
+                <span class="relay-desc">Irigasi tanaman</span>
+              </div>
+            </div>
+            <span class="led led-dim" id="pumpLed"></span>
+          </div>
+
+          <div class="relay-state">
+            <div class="state-item">
+              <span class="state-label">Mode Sistem</span>
+              <span class="state-value badge-mode" id="pumpModeText">AUTO</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Status Relay</span>
+              <span class="state-value" id="pumpStateText">OFF</span>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <span class="toggle-caption">Mode AUTO / MANUAL</span>
+            <div class="toggle-group">
+              <span class="toggle-label">MANUAL</span>
+              <label class="switch">
+                <input type="checkbox" id="pumpModeToggle" checked>
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">AUTO</span>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <span class="toggle-caption">Kontrol Relay</span>
+            <label class="switch small">
+              <input type="checkbox" id="pumpRelayToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <p class="auto-rule"><i class="fa-solid fa-circle-info"></i> AUTO: pompa ON jika tanah &lt; 40%</p>
+        </div>
+
+        <!-- ============ KIPAS ============ -->
+        <div class="relay fan">
+          <div class="relay-head">
+            <div class="relay-title">
+              <span class="relay-icon"><i class="fa-solid fa-fan"></i></span>
+              <div>
+                <h3>Kipas</h3>
+                <span class="relay-desc">Ventilasi / sirkulasi udara</span>
+              </div>
+            </div>
+            <span class="led led-dim" id="fanLed"></span>
+          </div>
+
+          <div class="relay-state">
+            <div class="state-item">
+              <span class="state-label">Mode Sistem</span>
+              <span class="state-value badge-mode" id="fanModeText">AUTO</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Status Relay</span>
+              <span class="state-value" id="fanStateText">OFF</span>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <span class="toggle-caption">Mode AUTO / MANUAL</span>
+            <div class="toggle-group">
+              <span class="toggle-label">MANUAL</span>
+              <label class="switch">
+                <input type="checkbox" id="fanModeToggle" checked>
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">AUTO</span>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <span class="toggle-caption">Kontrol Relay</span>
+            <label class="switch small">
+              <input type="checkbox" id="fanRelayToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <p class="auto-rule"><i class="fa-solid fa-circle-info"></i> AUTO: kipas ON jika suhu &gt; 30°C</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= GRAFIK ================= -->
+    <section class="chartsStack">
+
+      <div class="section-title">
+        <h2><i class="fa-solid fa-chart-line"></i> Grafik Sensor Realtime</h2>
+        <span class="subtitle" id="lastUpdate">Terakhir diperbarui: -</span>
+      </div>
+
+      <div class="chartCard">
+        <div class="section-title">
+          <h3><i class="fa-solid fa-temperature-three-quarters"></i> Grafik Suhu Udara</h3>
+          <span class="chart-unit">°C</span>
+        </div>
+        <div class="chartBox"><canvas id="tempChart"></canvas></div>
+      </div>
+
+      <div class="chartCard">
+        <div class="section-title">
+          <h3><i class="fa-solid fa-droplet"></i> Grafik Kelembapan Udara</h3>
+          <span class="chart-unit">%</span>
+        </div>
+        <div class="chartBox"><canvas id="humChart"></canvas></div>
+      </div>
+
+      <div class="chartCard">
+        <div class="section-title">
+          <h3><i class="fa-solid fa-leaf"></i> Grafik Kelembapan Tanah</h3>
+          <span class="chart-unit">%</span>
+        </div>
+        <div class="chartBox"><canvas id="soilChart"></canvas></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Delvia Nandarizka Anida (27125041) Smart Agriculture IoT &copy; 2026 &middot; ESP32 + ThingSpeak</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
